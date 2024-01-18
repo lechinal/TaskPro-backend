@@ -1,12 +1,14 @@
 const express = require("express");
+
 const logger = require("morgan");
 const cors = require("cors");
-const mongoose = require("mongoose");
 
+const mongoose = require("mongoose");
+require("dotenv").config();
 const path = require("path");
 const app = express();
+const authRouter = require("./src/routes/api/authRouter");
 
-require("dotenv").config();
 const URL_DB = process.env.URL_DB;
 mongoose
  .connect(URL_DB)
@@ -23,6 +25,8 @@ app.use(cors());
 app.use(express.json());
 app.use(logger(formatsLogger));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api/user", authRouter);
 
 app.use((_, res, next) => {
  next({ status: 404, message: "Not found" });
