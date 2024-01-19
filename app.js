@@ -1,8 +1,6 @@
 const express = require("express");
-
 const logger = require("morgan");
 const cors = require("cors");
-
 const mongoose = require("mongoose");
 require("dotenv").config();
 const path = require("path");
@@ -16,7 +14,7 @@ mongoose
   console.log("Database connection successful");
  })
  .catch((err) => {
-  console.log(`Eroare:${err.message}`);
+  console.log(`Error: ${err.message}`);
  });
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -24,7 +22,8 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(cors());
 app.use(express.json());
 app.use(logger(formatsLogger));
-app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/tmp", express.static(path.join(__dirname, "tmp")));
 
 app.use("/api/user", authRouter);
 
