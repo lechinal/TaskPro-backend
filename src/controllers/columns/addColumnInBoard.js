@@ -1,7 +1,7 @@
 const { Board } = require("../../models/board/board");
 const mongoose = require("mongoose");
 
-const { HttpError } = require("../../helpers/HttpError");
+const HttpError = require("../../helpers/HttpError");
 
 const addColumnInBoard = async (req, res, next) => {
   const { _id } = req.user;
@@ -14,7 +14,7 @@ const addColumnInBoard = async (req, res, next) => {
       _id: boardId,
       owner: _id,
     },
-    { $push: { columns: { _id: newObjectId, owner: boardId, ...req.body } } },
+    { $push: { columns: { _id: newObjectId, onwer: boardId, ...req.body } } },
     { new: true, select: "-createdAt -updatedAt" }
   );
 
