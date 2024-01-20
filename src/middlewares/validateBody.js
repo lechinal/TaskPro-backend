@@ -1,15 +1,14 @@
 const validateBody = (schema) => {
- const func = (req, res, next) => {
-  const { error } = schema.validate(req.body);
+  const func = (req, res, next) => {
+    const { error } = schema.validate(req.body);
 
-  if (error) {
-   throw new Error(`Bad Request: ${error.message}`);
-  }
+    if (error) {
+      throw new Error(`Bad Request: ${error.message}`);
+    }
+    next();
+  };
 
-  next();
- };
-
- return func;
+  return func;
 };
 
 module.exports = { validateBody };
