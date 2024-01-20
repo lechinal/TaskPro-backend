@@ -26,16 +26,16 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+
+    avatarUrl: {
+      type: String,
+      default: "",
+    },
   },
-  avatarUrl: {
-   type: String,
-   default: "",
-  },
- },
- {
-  timestamps: true,
-  versionKey: false,
- }
+  {
+    timestamps: true,
+    versionKey: false,
+  }
 );
 
 userSchema.post("save", function (error, doc, next) {
