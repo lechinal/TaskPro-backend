@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
 const User = require("../../models/user/user");
 require("dotenv").config();
 
@@ -13,6 +14,8 @@ const register = async (req, res) => {
   throw new Error("Email in use");
  }
 
+ const avatarUrl = gravatar.url(email, { s: "200", r: "pg", d: "identicon" });
+
  const salt = await bcrypt.genSalt();
  const hashPassword = await bcrypt.hash(password, salt);
 
@@ -20,6 +23,7 @@ const register = async (req, res) => {
   email,
   name,
   password: hashPassword,
+  avatarUrl,
  });
 
  const token = jwt.sign({ id: newUser._id }, SECRET_KEY, { expiresIn: "2h" });
@@ -27,9 +31,11 @@ const register = async (req, res) => {
  await User.findByIdAndUpdate(newUser._id, { token });
 
  res.status(201).json({
+  message: "Registration success",
   user: {
    email,
    name,
+   avatarUrl,
   },
   token,
  });
@@ -49,9 +55,11 @@ const login = async (req, res) => {
  await User.findByIdAndUpdate(user._id, { token });
 
  res.status(200).json({
+  message: "Login success",
   user: {
    email,
    name: user.name,
+   avatarUrl: user.avatarUrl,
   },
   token,
  });
@@ -80,11 +88,102 @@ const current = async (req, res, next) => {
  }
 
  res.status(200).json({
+  message: "User current success",
   user: {
    email: user.email,
    name: user.name,
+   avatarUrl: user.avatarUrl,
   },
  });
 };
+const updateUser = async (req, res) => {
+ try {
+  const updateData = req.body;
 
-module.exports = { register, login, logout, current };
+  if (!updateData || typeof updateData !== "object") {
+   throw new Error("Invalid update data format");
+  }
+
+  let avatarUrl = req.user.avatarUrl;
+
+  if (req.file) {
+   avatarUrl = req.file.filename;
+  }
+
+  const bodyUpdate = { avatarUrl };
+
+  if (updateData.password) {
+   const salt = await bcrypt.genSalt();
+   const hashPassword = await bcrypt.hash(updateData.password, salt);
+   bodyUpdate.password = hashPassword;
+  }
+
+  if (updateData.email) {
+   bodyUpdate.email = updateData.email;
+  }
+
+  if (updateData.name) {
+   bodyUpdate.name = updateData.name;
+  }
+
+  const result = await User.findByIdAndUpdate(req.user._id, bodyUpdate, {
+   new: true,
+  });
+
+  res.status(200).json({
+   message: "User update success",
+
+   user: {
+    email: result.email,
+    name: result.name,
+    avatarUrl: result.avatarUrl,
+   },
+  });
+ } catch (error) {
+  console.error(error);
+  res.status(400).json({ message: "Invalid request data" });
+ }
+};
+
+// const updateUser = async (req, res) => {
+//  try {
+//   if (!req.body.updateInfo || typeof req.body.updateInfo !== "string") {
+//    throw new Error("Invalid updateInfo format");
+//   }
+
+//   const updateData = JSON.parse(req.body.updateInfo);
+
+//   let avatarUrl = req.user.avatarUrl;
+
+//   if (req.file) {
+//    avatarUrl = req.file.filename;
+//   }
+
+//   const bodyUpdate = { ...updateData, avatarUrl };
+
+//   if (updateData.password) {
+//    const salt = await bcrypt.genSalt();
+//    const hashPassword = await bcrypt.hash(updateData.password, salt);
+//    bodyUpdate.password = hashPassword;
+//   }
+
+//   const result = await User.findByIdAndUpdate(req.user._id, bodyUpdate, {
+//    new: true,
+//   });
+
+//   res.status(200).json({
+//    message: "User update success",
+//    user: {
+//     password: result.password,
+//     email: result.email,
+//     name: result.name,
+//     avatarUrl: result.avatarUrl,
+//    },
+//   });
+//  } catch (error) {
+//   console.error(error);
+//   res.status(400).json({ message: "Invalid request data" });
+//  }
+// };
+
+module.exports = { register, login, logout, current, updateUser };
