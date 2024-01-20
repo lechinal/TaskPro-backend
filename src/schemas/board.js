@@ -20,7 +20,7 @@ const addCard = Joi.object({
   title: Joi.string().min(3).max(100).required(),
   text: Joi.string().min(3).max(300).required(),
   deadline: Joi.string().pattern(dateRegexp).required(),
-  owner: Joi.string().required(),
+  columnId: Joi.string().required(),
   priority: Joi.string().required(),
 });
 
