@@ -27,10 +27,15 @@ const userSchema = new Schema(
       default: "",
     },
   },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
+  avatarUrl: {
+   type: String,
+   default: "",
+  },
+ },
+ {
+  timestamps: true,
+  versionKey: false,
+ }
 );
 
 userSchema.post("save", function (error, doc, next) {
