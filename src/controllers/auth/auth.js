@@ -145,45 +145,4 @@ const updateUser = async (req, res) => {
  }
 };
 
-// const updateUser = async (req, res) => {
-//  try {
-//   if (!req.body.updateInfo || typeof req.body.updateInfo !== "string") {
-//    throw new Error("Invalid updateInfo format");
-//   }
-
-//   const updateData = JSON.parse(req.body.updateInfo);
-
-//   let avatarUrl = req.user.avatarUrl;
-
-//   if (req.file) {
-//    avatarUrl = req.file.filename;
-//   }
-
-//   const bodyUpdate = { ...updateData, avatarUrl };
-
-//   if (updateData.password) {
-//    const salt = await bcrypt.genSalt();
-//    const hashPassword = await bcrypt.hash(updateData.password, salt);
-//    bodyUpdate.password = hashPassword;
-//   }
-
-//   const result = await User.findByIdAndUpdate(req.user._id, bodyUpdate, {
-//    new: true,
-//   });
-
-//   res.status(200).json({
-//    message: "User update success",
-//    user: {
-//     password: result.password,
-//     email: result.email,
-//     name: result.name,
-//     avatarUrl: result.avatarUrl,
-//    },
-//   });
-//  } catch (error) {
-//   console.error(error);
-//   res.status(400).json({ message: "Invalid request data" });
-//  }
-// };
-
 module.exports = { register, login, logout, current, updateUser };
