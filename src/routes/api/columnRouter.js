@@ -12,5 +12,8 @@ router.post(
   authenticate,
   ctrl.addColumnInBoard
 );
+router.delete("/", authenticate, ctrl.deleteColumn);
+router.get("/", authenticate, ctrl.getColumns);
+router.put("/", authenticate, ctrl.updateColumn);
 
 module.exports = router;
