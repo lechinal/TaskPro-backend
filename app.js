@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const corsOptions = require("./cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const path = require("path");
@@ -23,7 +24,7 @@ mongoose
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(logger(formatsLogger));
 

@@ -13,7 +13,6 @@ router.post("/logout", authenticate, logout);
 
 router.get("/current", authenticate, current);
 
-// router.patch("/update", authenticate, upload.single("avatar"), controllerWrapper(saveImg), updateUser);
 router.patch("/update", authenticate, updateUser);
 
 module.exports = router;
