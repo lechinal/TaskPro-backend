@@ -1,6 +1,13 @@
 const express = require("express");
 
-const { login, register, logout, current, updateUser } = require("../../controllers/auth/auth");
+const {
+  login,
+  register,
+  logout,
+  current,
+  updateUser,
+  theme,
+} = require("../../controllers/auth/auth");
 const { authenticate } = require("../../middlewares/authenticate");
 const { validateBody } = require("../../middlewares/validateBody");
 const schemasUser = require("../../schemas/user");
@@ -15,5 +22,6 @@ router.get("/current", authenticate, current);
 
 // router.patch("/update", authenticate, upload.single("avatar"), controllerWrapper(saveImg), updateUser);
 router.patch("/update", authenticate, updateUser);
+router.patch("/theme", authenticate, theme);
 
 module.exports = router;
