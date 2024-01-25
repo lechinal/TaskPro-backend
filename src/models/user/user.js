@@ -29,6 +29,11 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    theme: {
+      type: String,
+      enum: ["dark", "light", "violet"],
+      default: "light",
+    },
   },
   {
     timestamps: true,
